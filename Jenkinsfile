@@ -1,23 +1,25 @@
 pipeline {
     agent any
+
     triggers {
         githubPush()
     }
+
     stages {
-        stage(Checkout) {
+        stage('Checkout') {
             steps {
-                git 
+                checkout scm
             }
         }
 
-        stage('Build Images'){
+        stage('Build Images') {
             steps {
                 sh 'docker compose build'
             }
         }
 
-        stage('Deploy'){
-            when{
+        stage('Deploy') {
+            when {
                 branch 'main'
             }
             steps {
