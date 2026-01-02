@@ -1,7 +1,7 @@
 pipeline {
-    agent {
-        docker { image 'docker:20.10-dind' }
-    }
+
+    agent any
+    
     triggers {
         githubPush()
     }
