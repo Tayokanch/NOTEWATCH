@@ -8,6 +8,7 @@ import userRouter from './src/router/userRouter.js'
 import noteRouter from './src/router/noteRouter.js'
 import { requestLogger } from './src/middleware/requestLoggers.js';
 import logsRouter from './src/router/logsRouter.js'
+import healthRouter from './src/router/healthRouter.js'
 const app = express();
 
 app.use(compression());
@@ -29,3 +30,4 @@ app.listen(PORT, ()=>{
 app.use('/', userRouter)
 app.use('/', noteRouter)
 app.use('/', logsRouter)
+app.use('/', healthRouter)

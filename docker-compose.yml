@@ -12,20 +12,11 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - note-watch-network
-
-  nginx:
-    image: nginx:1.28.1
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - notewatchapi_v1
-      - notewatchapi_v2
-      - notewatchapi_v3
-    restart: always
-    networks:
-      - note-watch-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
 
   notewatchapi_v1:
     build: .
@@ -36,12 +27,18 @@ services:
       DB_NAME: ${DB_NAME}
       DB_PORT: 5432
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     expose:
       - "3000"
     networks:
       - note-watch-network
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health || exit 1"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
 
   notewatchapi_v2:
     build: .
@@ -52,12 +49,18 @@ services:
       DB_NAME: ${DB_NAME}
       DB_PORT: 5432
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     expose:
       - "3001"
     networks:
       - note-watch-network
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health || exit 1"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
 
   notewatchapi_v3:
     build: .
@@ -68,12 +71,35 @@ services:
       DB_NAME: ${DB_NAME}
       DB_PORT: 5432
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     expose:
       - "3002"
     networks:
       - note-watch-network
     restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health || exit 1"]
+      interval: 5s
+      retries: 5
+      start_period: 5s
+
+  nginx:
+    image: nginx:1.28.1
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      notewatchapi_v1:
+        condition: service_healthy
+      notewatchapi_v2:
+        condition: service_healthy
+      notewatchapi_v3:
+        condition: service_healthy
+    restart: always
+    networks:
+      - note-watch-network
 
 volumes:
   pgdata:
