@@ -50,7 +50,7 @@ pipeline {
             steps {
                 sh '''
                 docker exec notewatchapi_v1 \
-                node app/src/db/runMigrations.js
+                node src/db/runMigrations.js
                 '''
             }
         }
