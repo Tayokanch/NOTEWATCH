@@ -11,41 +11,59 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+            }
         }
 
         stage('Prepare .env') {
             steps {
                 sh '''
                 cat > .env <<EOF
-                DB_USER=${DB_USER}
-                DB_PASSWORD=${DB_PASSWORD}
-                DB_NAME=${DB_NAME}
-                DB_PORT=${DB_PORT}
-                JWT_SECRET=${JWT_SECRET}
-                INIT_ADMIN_EMAIL=${INIT_ADMIN_EMAIL}
-                EOF
+                    DB_USER=${DB_USER}
+                    DB_PASSWORD=${DB_PASSWORD}
+                    DB_NAME=${DB_NAME}
+                    DB_PORT=${DB_PORT}
+                    JWT_SECRET=${JWT_SECRET}
+                    INIT_ADMIN_EMAIL=${INIT_ADMIN_EMAIL}
+                    EOF
                 '''
             }
         }
 
-        stage('Build App Images') {
+        stage('Build Images') {
             steps {
                 sh 'docker compose build'
             }
         }
 
-        stage('Deploy Services') {
+        stage('Start Services') {
             steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d --no-build'
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Run DB Migrations') {
+            steps {
+                sh '''
+                docker exec notewatchapi_v1 \
+                node src/db/runMigrations.js
+                '''
+            }
+        }
+
+        stage('Verify') {
+            steps {
                 sh 'docker compose ps'
             }
         }
 
         stage('Cleanup .env') {
-            steps { sh 'rm -f .env' }
+            steps {
+                sh 'rm -f .env'
+            }
         }
     }
 }
