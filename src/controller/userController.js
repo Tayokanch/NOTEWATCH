@@ -14,9 +14,8 @@ export const signUp = async (req, res) => {
         error: 'username, email, and password are required',
       });
     }
-
-    const role =
-      email === process.env.INIT_ADMIN_EMAIL ? 'admin' : 'user';
+    
+    const role = email === process.env.INIT_ADMIN_EMAIL ? 'admin' : 'user';
 
     const passwordHash = await bcrypt.hash(password, 12);
 
