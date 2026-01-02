@@ -45,7 +45,7 @@ services:
 
   notewatchapi_v2:
     build: .
-    container_name: notewatchapi_v1
+    container_name: notewatchapi_v2
     environment:
       DB_HOST: db
       DB_USER: ${DB_USER}
@@ -69,7 +69,7 @@ services:
 
   notewatchapi_v3:
     build: .
-    container_name: notewatchapi_v1
+    container_name: notewatchapi_v3
     environment:
       DB_HOST: db
       DB_USER: ${DB_USER}
