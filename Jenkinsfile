@@ -39,7 +39,6 @@ pipeline {
         }
 
         stage('Deploy Services') {
-            when { branch 'main' }
             steps {
                 sh '''
                 docker compose down
