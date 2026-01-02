@@ -14,6 +14,7 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./migration:/docker-entrypoint-initdb.d
     networks:
       - note-watch-network
     healthcheck:
