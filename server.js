@@ -18,7 +18,7 @@ app.use(morgan('dev'));
 app.use(requestLogger); 
 
 
-const PORT = process.env.PORT
+const PORT = process.env.API_PORT
 
 await initDb();
 
