@@ -17,7 +17,6 @@ export const signUp = async (req, res) => {
 
     const role =
       email === process.env.INIT_ADMIN_EMAIL ? 'admin' : 'user';
-    console.log("Role is", role)
 
     const passwordHash = await bcrypt.hash(password, 12);
 
@@ -57,8 +56,6 @@ export const login = async (req, res) =>{
     );
 
     res.locals.user_id = user.id;
-
-  console.log("This is userID inside Controller", res.locals.user_id )
 
     return res.json({
       message: 'Login successful',
