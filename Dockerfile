@@ -10,6 +10,8 @@ RUN npm install --omit=dev
 
 COPY . .
 
-EXPOSE 3000
+ENV API_PORT=3000
+
+EXPOSE $API_PORT
 
 CMD ["node", "server.js"]
