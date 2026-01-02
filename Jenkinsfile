@@ -4,6 +4,7 @@ pipeline {
     environment {
         DB_USER           = credentials('DB_USER')
         DB_PASSWORD       = credentials('DB_PASSWORD')
+        DB_HOST           = credentials('DB_HOST')
         DB_NAME           = credentials('DB_NAME')
         DB_PORT           = credentials('DB_PORT')
         JWT_SECRET        = credentials('JWT_SECRET')
