@@ -34,7 +34,7 @@ pipeline {
 
         stage('Build All Images') {
             steps {
-                sh 'docker compose build --no-parallel'
+                sh 'docker compose build'
             }
         }
 
