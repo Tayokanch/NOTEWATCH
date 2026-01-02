@@ -13,21 +13,21 @@ services:
     networks:
       - note-watch-network
 
-nginx:
-  image: nginx:1.28.1
-  ports:
-    - "80:80"
-  volumes:
-    - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-  depends_on:
-    - api_v1
-    - api_v2
-    - api_v3
-  restart: always
-  networks:
-    - note-watch-network
+  nginx:
+    image: nginx:1.28.1
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - notewatchapi_v1
+      - notewatchapi_v2
+      - notewatchapi_v3
+    restart: always
+    networks:
+      - note-watch-network
 
-  api_v1:
+  notewatchapi_v1:
     build: .
     environment:
       DB_HOST: db
@@ -43,7 +43,7 @@ nginx:
       - note-watch-network
     restart: always
 
-  api_v2:
+  notewatchapi_v2:
     build: .
     environment:
       DB_HOST: db
@@ -59,7 +59,7 @@ nginx:
       - note-watch-network
     restart: always
 
-  api_v3:
+  notewatchapi_v3:
     build: .
     environment:
       DB_HOST: db
