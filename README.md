@@ -143,7 +143,7 @@ Nginx communicates with the API services over Docker’s private bridge network,
 | `/create-note`  | API v3                 | 3002 |
 | `/get-notes`    | API v1                 | 3000 |
 | `/request-logs` | API v2                 | 3002 |
-| `/health`       | Health check for each API | N/A |
+| `/health`       | Health check for each API
 
 
 ## 🧪 How to Test the APPLICATION 
