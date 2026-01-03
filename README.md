@@ -10,7 +10,7 @@ This repository represents the **development layer** of the system, intentionall
 
 ## 🏗️ Architecture Overview
 
-![NoteWatch Architecture](/Users/admin/Desktop/NoteWatch/src/doc/architecture.png)
+![NoteWatch Architecture](src/doc/architecture.png)
 
 ---
 
