@@ -2,7 +2,7 @@
 
  
 
-![Architecture Diagram](./path-to-your-diagram.png) 
+![Architecture Diagram](/src/doc//deploy.png) 
 
  
 
