@@ -1,122 +1,297 @@
-# 📝 NoteWatch — Backend API (Development)
+# NoteWatch — Secure CI/CD Deployment with Docker, Nginx & Cloudflare 
 
-**NoteWatch** is a production-style backend API built to simulate a realistic application lifecycle, from API development to containerized service integration.  
-The project focuses on **secure API design, authentication, and reliable communication with a containerized PostgreSQL database inside a private Docker network**.
+ 
 
-This repository represents the **development layer** of the system, intentionally designed to integrate cleanly with containerized infrastructure, load balancing, and secure production exposure.
+![Architecture Diagram](./path-to-your-diagram.png) 
 
----
+ 
 
+--- 
 
-## 🏗️ Architecture Overview
+ 
 
-![NoteWatch Architecture](src/doc/architecture.png)
+## 🔹 Project Overview 
 
----
+ 
 
-## 🎯 Project Objectives
+I designed and implemented a ***CI/CD pipeline*** that automates deployment of containerized applications to a self-hosted VM, creating a secure, production-like environment using modern DevOps best practices. 
 
-- Build a secure, role-based CRUD API from scratch
-- Integrate a containerized PostgreSQL database
-- Design services to communicate over a private Docker network
-- Understand how application design impacts containerized deployments
-- Produce an API suitable for load balancing and production use
+ 
 
----
+The project demonstrates how to deploy production-ready systems **without exposing public ports**, while supporting **HTTPS**, **automated deployments**, and **scalable service routing**. 
 
-## 🚀 Core Features
+ 
 
-### 🔐 Authentication & Authorization
-- JWT-based authentication (stateless)
-- Role-based access control (`user` / `admin`)
-- Protected routes enforced via authorization middleware
+--- 
 
-### 🗂️ User-Owned CRUD Operations
-- Full Create, Read, Update, Delete operations on notes
-- Notes strictly scoped to authenticated users
-- Admin role with elevated access permissions
+ 
 
-### 🔒 Secure API Access
-- Token-based authorization (no session storage)
-- Environment-based secrets and configuration
+## 🔹 Architecture Overview 
 
-### 📊 Centralized Request Metadata Logging
-- Logs request metadata including:
-  - HTTP method
-  - Endpoint
-  - Timestamp
-  - Client IP address
-  - User-Agent
-- Designed to support debugging, auditing, and observability
+ 
 
----
+- **Cloudflare Tunnel**: Securely connects the VM to the internet without opening any inbound ports. 
 
-## 🧱 Application Architecture (Development Focus)
+- **TLS Termination**: Managed by Cloudflare at the edge, so the server does not need certificates.  
 
-### Backend API
-- Node.js REST API
-- Modular structure with clear separation of concerns
-- Authentication, authorization, and logging implemented as middleware
-- Health check endpoint included to support orchestration and load balancing
+- **Nginx**: Reverse proxy and load balancer routing requests to multiple API containers.  
 
-### Database (PostgreSQL)
-- PostgreSQL running in its own Docker container
-- Relational schema designed to support:
-  - User ownership
-  - Role-based access enforcement
-  - Data integrity and constraints
-- Database traffic from the application flows exclusively over a private Docker network
-- External access is restricted to the VM environment for development and administration use
+- **Docker & Docker Compose**: Containerized orchestration for APIs and PostgreSQL database.  
 
+- **Jenkins CI/CD**: Automated builds, testing, and deployments triggered on Git push.  
 
----
+- **PostgreSQL**: Persistent storage using Docker volumes.  
 
-## 🐳 Docker & Networking (Design Considerations)
+- **Internal Docker Network**: Ensures services communicate securely without exposing unnecessary ports.  
 
-The application was **designed with containerized environments in mind from the start**, rather than adapted later.
+ 
 
-- **Multi-Container Architecture**
-  - API and PostgreSQL run in separate containers
-  - Clear separation between application and data layers
+--- 
 
-- **Custom Docker Bridge Network**
-  - Services communicate over a private Docker bridge network
-  - PostgreSQL is not publicly exposed
-  - Networking configured explicitly to mirror production patterns
+ 
 
-- **Persistent Data Storage**
-  - PostgreSQL uses Docker volumes for data persistence
-  - Container restarts do not result in data loss
+## 🔹 Deployment Flow 
 
-- **Environment-Based Configuration**
-  - Database connection details injected via environment variables
-  - Supports multiple environments without code changes
+ 
 
----
+1. Push code to Git repository.  
 
-## 🧠 Why This Project Matters
+2. Jenkins pipeline is triggered via webhook.  
 
-This project was intentionally built in order to:
+3. Docker images are built on the target VM.  
 
-- Understand how APIs interact with containerized databases
-- Learn how service isolation and private networking improve security
-- Experience the full lifecycle of building and connecting services in Docker
-- Bridge the gap between backend development and DevOps practices
+4. Docker Compose deploys/redeploys services.  
 
-The result is a backend API that is **simple, secure, database-backed, container-ready, and suitable for production deployment behind a reverse proxy and load balancer**.
+5. Nginx load balances traffic across three API containers.  
 
----
+6. Cloudflare Tunnel exposes the application securely over HTTPS. 
 
-## 🔮 Future Improvements
+ 
 
-- CI/CD pipeline for automated builds and deployments
-- Centralized logging and metrics collection
-- Secrets management using a dedicated secrets store
-- Database migrations and schema versioning improvements
-- Rate limiting and additional API hardening
+--- 
 
----
+ 
 
-# Checkout to the deployment branch for Deployment Documentation
+## 🔹 Key Outcomes 
 
-```bash
+ 
+
+- Secure deployment without exposing public ports.  
+
+- Fully automated **CI/CD pipeline** with Jenkins.  
+
+- Hostname-based routing that directs requests to multiple API services behind a single public endpoint..  
+
+- TLS termination at Cloudflare — no local certificate management required.  
+
+- Load balancing between multiple API containers.  
+
+- PostgreSQL database with internal-only access.  
+
+- Clean, modular separation of concerns for easier maintenance and security. 
+
+ 
+
+--- 
+
+ 
+
+## 🔹 Technologies Used 
+
+ 
+
+ 
+
+- 🌐 **Cloudflare Tunnel** – Secure outbound-only access with TLS handled at the edge 
+
+- 🌀 **Nginx** 
+
+- 🐳 **Docker & Docker Compose**  
+
+- ⚙️ **Jenkins CI/CD**  
+
+- 🗄️ **PostgreSQL**  
+
+- 🖥️ **Linux (Ubuntu)** – Self-hosted VM environment 
+
+- 🟢 **Node.js** – 
+
+- 🚀 **CI/CD Best Practices**  
+
+ 
+
+--- 
+
+ 
+
+## 🔹 API Endpoints 
+
+ 
+
+## API Routing via Nginx 
+
+ 
+
+All API traffic is routed through **Nginx**, which serves as both a reverse proxy and a **round-robin load balancer**.  
+
+Incoming requests are distributed across **three identical API containers**, improving fault tolerance and ensuring consistent performance under load. 
+
+ 
+
+Nginx communicates with the API services over Docker’s private bridge network, keeping internal ports isolated from public access while maintaining efficient service discovery. 
+
+ 
+
+ 
+
+| Endpoint | Service Container | Port | 
+
+|-----------------|------------------------|------| 
+
+| `/user/login` | API v1 | 3000 | 
+
+| `/user/signup` | API v2 | 3001 | 
+
+| `/create-note` | API v3 | 3002 | 
+
+| `/get-notes` | API v1 | 3000 | 
+
+| `/request-logs` | API v2 | 3001 | 
+
+| `/health` | Health check for each API  
+
+ 
+
+ 
+
+## 🧪 How to Test the APPLICATION 
+
+ 
+
+The NoteWatch API is securely available over HTTPS at https://notewatch.tayolabs.dev, with TLS managed by Cloudflare and requests routed through Nginx to the backend services. 
+
+ 
+
+ 
+
+You can test the endpoints using **Postman**, **insomnia**, **curl**, or any HTTP client. 
+
+ 
+
+--- 
+
+ 
+
+### 🧪 Test Flow 
+
+ 
+
+Most endpoints require authentication using a **Bearer Access Token**. 
+
+ 
+
+1. Create a user account (`/user/signup`) 
+
+2. Log in (`/user/login`) 
+
+3. Use the returned `accessToken` in the `Authorization` header: 
+
+ 
+
+ 
+
+**Request Body** 
+
+```json 
+
+1. POST /user/signup 
+
+{ 
+
+"username": "Tester", 
+
+"email": "tester@example.com", 
+
+"password": "strongpassword123" 
+
+} 
+
+ 
+
+ 
+
+2. POST /user/login 
+
+{ 
+
+"email": "tester@example.com", 
+
+"password": "strongpassword123" 
+
+} 
+
+ 
+
+Expected Response 
+
+{ 
+
+"accessToken": "JWT_ACCESS_TOKEN" 
+
+} 
+
+ 
+
+ 
+
+ 
+
+3. POST /create-note 
+
+Authorization: Bearer <ACCESS_TOKEN> 
+
+{ 
+
+"title": "My First Note" 
+
+} 
+
+ 
+
+ 
+
+4. GET /get-notes 
+
+Authorization: Bearer <JWT_ACCESS_TOKEN> 
+
+ 
+
+5. PUT /update-note 
+
+Authorization: Bearer <JWT_ACCESS_TOKEN> 
+
+{ 
+
+"noteID": "NOTE_ID", 
+
+"title": "Updated Note Title" 
+
+} 
+
+ 
+
+6. DELETE /delete-note/{noteID} 
+
+Authorization: Bearer <JWT_ACCESS_TOKEN> 
+
+ 
+
+7. GET /my-logs 
+
+Authorization: Bearer <JWT_ACCESS_TOKEN> 
+
+``` 
+
+ 
+
+ 
