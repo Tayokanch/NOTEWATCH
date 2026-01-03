@@ -130,43 +130,23 @@ The project demonstrates how to deploy production-ready systems **without exposi
 
 ## API Routing via Nginx 
 
- 
-
 All API traffic is routed through **Nginx**, which serves as both a reverse proxy and a **round-robin load balancer**.  
 
 Incoming requests are distributed across **three identical API containers**, improving fault tolerance and ensuring consistent performance under load. 
 
- 
-
 Nginx communicates with the API services over Docker’s private bridge network, keeping internal ports isolated from public access while maintaining efficient service discovery. 
 
- 
+| Endpoint         | Service Container       | Port |
+|-----------------|------------------------|------|
+| `/user/login`   | API v1                 | 3000 |
+| `/user/signup`  | API v2                 | 3001 |
+| `/create-note`  | API v3                 | 3002 |
+| `/get-notes`    | API v1                 | 3000 |
+| `/request-logs` | API v2                 | 3002 |
+| `/health`       | Health check for each API | N/A |
 
- 
-
-| Endpoint | Service Container | Port | 
-
-|-----------------|------------------------|------| 
-
-| `/user/login` | API v1 | 3000 | 
-
-| `/user/signup` | API v2 | 3001 | 
-
-| `/create-note` | API v3 | 3002 | 
-
-| `/get-notes` | API v1 | 3000 | 
-
-| `/request-logs` | API v2 | 3001 | 
-
-| `/health` | Health check for each API  
-
- 
-
- 
 
 ## 🧪 How to Test the APPLICATION 
-
- 
 
 The NoteWatch API is securely available over HTTPS at https://notewatch.tayolabs.dev, with TLS managed by Cloudflare and requests routed through Nginx to the backend services. 
 
