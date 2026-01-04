@@ -111,7 +111,7 @@ services:
   nginx:
     image: nginx:1.28.1
     container_name: notewatch-nginx
-    port:
+    ports:
       - "80:80"
     expose:
       - "80"
