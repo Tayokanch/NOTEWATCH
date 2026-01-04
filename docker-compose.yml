@@ -75,10 +75,10 @@ services:
       - note-watch-network
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "for i in $(seq 1 5); do wget -qO- http://localhost:3001/health && exit 0 || sleep 1; done; exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3001/health || exit 1"]
       interval: 5s
       retries: 5
-      start_period: 10s
+      start_period: 20s
 
   notewatchapi_v3:
     build: .
@@ -101,11 +101,10 @@ services:
       - note-watch-network
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "for i in $(seq 1 5); do wget -qO- http://localhost:3002/health && exit 0 || sleep 1; done; exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3002/health || exit 1"]
       interval: 5s
       retries: 5
-      start_period: 10s
-
+      start_period: 20s
   # -----------------------
   # Nginx Load Balancer
   # -----------------------
